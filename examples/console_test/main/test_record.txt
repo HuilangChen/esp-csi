@@ -1,3 +1,5 @@
+Run command to collect data: idf.py monitor > main/CSI.txt 2> main/output.err
+
 Nov 3rd
 Test 1
 I (40451) wifi_cmd: sta connecting to 'esp32_softap'

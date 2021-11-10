@@ -63,8 +63,8 @@ void wifi_csi_raw_cb(void *ctx, wifi_csi_info_t *info)
     static char buff[2048];
     size_t len = 0;
     wifi_pkt_rx_ctrl_t *rx_ctrl = &info->rx_ctrl;
-    static uint32_t s_count = 0;
-
+    // static uint32_t s_count = 0;
+    /*
     if (!s_count) {
         // ets_printf("type,id,mac,rssi,rate,sig_mode,mcs,bandwidth,smoothing,not_sounding,aggregation,stbc,fec_coding,sgi,noise_floor,ampdu_cnt,channel,secondary_channel,local_timestamp,ant,sig_len,rx_state,len,first_word,data\n");
         len += snprintf(buff, sizeof(buff),"type,id,mac,rssi,rate,sig_mode,mcs,bandwidth,smoothing,not_sounding,aggregation,stbc,fec_coding,sgi,noise_floor,ampdu_cnt,channel,secondary_channel,local_timestamp,ant,sig_len,rx_state,len,first_word,data\n");
@@ -76,16 +76,16 @@ void wifi_csi_raw_cb(void *ctx, wifi_csi_info_t *info)
                rx_ctrl->aggregation, rx_ctrl->stbc, rx_ctrl->fec_coding, rx_ctrl->sgi,
                rx_ctrl->noise_floor, rx_ctrl->ampdu_cnt, rx_ctrl->channel, rx_ctrl->secondary_channel,
                rx_ctrl->timestamp, rx_ctrl->ant, rx_ctrl->sig_len, rx_ctrl->rx_state);
-
     len += snprintf(buff + len, sizeof(buff) - len, ",%d,%d,\"[", info->len, info->first_word_invalid);
-
+    */
+    len += snprintf(buff + len, sizeof(buff) - len, "CSI_DATA %d:[", rx_ctrl->timestamp);
     int i = 0;
     for (; i < info->len - 1; i++) {
         len += snprintf(buff + len, sizeof(buff) - len, "%d,", info->buf[i]);
     }
     len += snprintf(buff + len, sizeof(buff) - len, "%d",info->buf[i]);
 
-    len += snprintf(buff + len, sizeof(buff) - len, "]\"\n");
+    len += snprintf(buff + len, sizeof(buff) - len, "]\n");
     ets_printf("%s",buff);
 }
 
@@ -134,13 +134,14 @@ static void wifi_radar_cb(const wifi_radar_info_t *info, void *ctx)
         s_last_move_time  = 0;
         gpio_set_level(CONFIG_GPIO_LED_MOVE_STATUS, 0);
     }
-
+    /*
     ESP_LOGI(TAG, "<%d> time: %u ms, rssi: %d, corr: %.3f, std: %.3f, std_avg: %.3f, std_max: %.3f, threshold: %.3f/%.3f, trigger: %d/%d, free_heap: %u/%u",
              s_count, info->time_end - info->time_start, info->rssi_avg,
              amplitude_corr, amplitude_std, amplitude_std_avg, amplitude_std_max,
              g_move_absolute_threshold, g_move_relative_threshold,
              amplitude_std > g_move_absolute_threshold, trigger_relative_flag,
              esp_get_minimum_free_heap_size(), esp_get_free_heap_size());
+    */
 }
 
 void app_main(void)
@@ -187,6 +188,7 @@ void app_main(void)
     cmd_register_csi();
     cmd_register_detect();
 
+    /*
     printf("\n");
     printf(" =======================================================================\n");
     printf(" |                    Steps to test CSI                                |\n");
@@ -204,6 +206,7 @@ void app_main(void)
     printf(" |     "LOG_COLOR_I"csi>"LOG_RESET_COLOR" detect -a <absolute_threshold> -r <relative_threshold>     |\n");
     printf(" |                                                                     |\n");
     printf(" ======================================================================\n\n");
+    */
 
     // ESP_ERROR_CHECK(esp_console_start_repl(repl));
     ESP_ERROR_CHECK(esp_console_run("sta esp32_Access_Point twoorigin", cmd_ret));
