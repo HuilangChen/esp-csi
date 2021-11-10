@@ -187,14 +187,14 @@ void app_main(void)
     printf(" |                    Steps to test CSI                                |\n");
     printf(" |                                                                     |\n");
     printf(" |  1. Print 'help' to gain overview of commands                       |\n");
-    printf(" |     "LOG_COLOR_I"csi>"LOG_RESET_COLOR" help                                                       |\n");
+    printf(" |     "LOG_COLOR_E"csi>"LOG_RESET_COLOR" help                                                       |\n");
     printf(" |  2. Start SoftAP or Sta on another ESP32/ESP32S2/ESP32C3            |\n");
-    printf(" |     "LOG_COLOR_I"csi>"LOG_RESET_COLOR" sta <ssid> <pwd>                                           |\n");
+    printf(" |     "LOG_COLOR_W"csi>"LOG_RESET_COLOR" sta <ssid> <pwd>                                           |\n");
     printf(" |     "LOG_COLOR_I"csi>"LOG_RESET_COLOR" ap <ssid> <pwd>                                            |\n");
     printf(" |  3. Run ping to test                                                |\n");
-    printf(" |     "LOG_COLOR_I"csi>"LOG_RESET_COLOR" ping <ip> -c <count> -i <interval>                         |\n");
+    printf(" |     "LOG_COLOR_E"csi>"LOG_RESET_COLOR" ping <ip> -c <count> -i <interval>                         |\n");
     printf(" |  4. Configure CSI parameters                                        |\n");
-    printf(" |     "LOG_COLOR_I"csi>"LOG_RESET_COLOR" csi -m <mac(xx:xx:xx:xx:xx:xx)> -l <len>                   |\n");
+    printf(" |     "LOG_COLOR_W"csi>"LOG_RESET_COLOR" csi -m <mac(xx:xx:xx:xx:xx:xx)> -l <len>                   |\n");
     printf(" |  5. Configure CSI parameters                                        |\n");
     printf(" |     "LOG_COLOR_I"csi>"LOG_RESET_COLOR" detect -a <absolute_threshold> -r <relative_threshold>     |\n");
     printf(" |                                                                     |\n");

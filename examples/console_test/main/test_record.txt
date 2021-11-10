@@ -1,0 +1,41 @@
+Nov 3rd
+Test 1
+I (40451) wifi_cmd: sta connecting to 'esp32_softap'
+I (40451) wifi:mode : sta (7c:9e:bd:34:b0:f0)
+I (40451) wifi:enable tsf
+I (42161) wifi:new:<13,2>, old:<1,1>, ap:<255,255>, sta:<13,2>, prof:1
+I (42691) wifi:state: init -> auth (b0)
+I (42701) wifi:state: auth -> assoc (0)
+I (42731) wifi:state: assoc -> run (10)
+I (42751) wifi:connected with esp32_softap, aid = 1, channel 13, 40D, bssid = 7c:9e:bd:34:cb:39
+I (42751) wifi:security: WPA2-PSK, phy: bgn, rssi: -22
+I (42761) wifi:pm start, type: 1
+
+I (42761) wifi_cmd: Connected to esp32_softap (bssid: 7c:9e:bd:34:cb:39, channel: 13)
+I (42781) wifi:AP's beacon interval = 102400 us, DTIM period = 2
+I (43511) esp_netif_handlers: sta ip: 192.168.4.2, mask: 255.255.255.0, gw: 192.168.4.1
+
+
+Test 2
+AP:
+I (41611) wifi:mode : softAP (7c:9e:bd:34:cb:39)
+I (41611) wifi:Total power save buffer number: 16
+I (41611) wifi:Init max length of beacon: 752/752
+I (41611) wifi:Init max length of beacon: 752/752
+I (42161) wifi:Total power save buffer number: 16
+I (42171) wifi_cmd: Starting SoftAP SSID: csi_softap, Password: Owi12345
+
+STA:
+I (27661) wifi:mode : sta (7c:9e:bd:34:b0:f0)ftap'
+I (27661) wifi:enable tsf
+I (29391) wifi:new:<13,2>, old:<1,1>, ap:<255,255>, sta:<13,2>, prof:1
+I (29921) wifi:state: init -> auth (b0)
+I (29931) wifi:state: auth -> assoc (0)
+I (29951) wifi:state: assoc -> run (10)
+I (29961) wifi:connected with csi_softap, aid = 1, channel 13, 40D, bssid = 7c:9e:bd:34:cb:39
+I (29961) wifi:security: WPA2-PSK, phy: bgn, rssi: -32
+I (29971) wifi:pm start, type: 1
+
+I (29981) wifi_cmd: Connected to csi_softap (bssid: 7c:9e:bd:34:cb:39, channel: 13)
+I (30011) wifi:AP's beacon interval = 102400 us, DTIM period = 2
+I (30511) esp_netif_handlers: sta ip: 192.168.4.2, mask: 255.255.255.0, gw: 192.168.4.1
