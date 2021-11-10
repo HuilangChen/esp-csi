@@ -145,6 +145,8 @@ static void wifi_radar_cb(const wifi_radar_info_t *info, void *ctx)
 
 void app_main(void)
 {
+    int a = 10;
+    int *cmd_ret = &a;
     wifi_radar_config_t radar_config = {
         .wifi_radar_cb = wifi_radar_cb,
         // .filter_len = 384,
@@ -171,10 +173,13 @@ void app_main(void)
      * @brief Register serial command
      */
     esp_console_repl_t *repl = NULL;
+    esp_console_config_t console_config = ESP_CONSOLE_CONFIG_DEFAULT();
     esp_console_repl_config_t repl_config = ESP_CONSOLE_REPL_CONFIG_DEFAULT();
-    esp_console_dev_uart_config_t uart_config = ESP_CONSOLE_DEV_UART_CONFIG_DEFAULT();
+    // esp_console_dev_uart_config_t uart_config = ESP_CONSOLE_DEV_UART_CONFIG_DEFAULT();
     repl_config.prompt = "csi>";
-    ESP_ERROR_CHECK(esp_console_new_repl_uart(&uart_config, &repl_config, &repl));
+    // ESP_ERROR_CHECK(esp_console_new_repl_uart(&uart_config, &repl_config, &repl));
+
+    ESP_ERROR_CHECK(esp_console_init(&console_config));
 
     cmd_register_system();
     cmd_register_wifi();
@@ -200,5 +205,10 @@ void app_main(void)
     printf(" |                                                                     |\n");
     printf(" ======================================================================\n\n");
 
-    ESP_ERROR_CHECK(esp_console_start_repl(repl));
+    // ESP_ERROR_CHECK(esp_console_start_repl(repl));
+    ESP_ERROR_CHECK(esp_console_run("sta esp32_Access_Point twoorigin", cmd_ret));
+    ESP_ERROR_CHECK(esp_console_run("ping 192.168.4.1", cmd_ret));
+    ESP_ERROR_CHECK(esp_console_run("csi -m 7c:9e:bd:34:cb:39 -l 384", cmd_ret));
+    ESP_ERROR_CHECK(esp_console_run("csi -o", cmd_ret));
+
 }
