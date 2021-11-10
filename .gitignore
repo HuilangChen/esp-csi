@@ -80,3 +80,7 @@ docs/docusaurus/website/node_modules
 
 # clangd
 .cache/
+
+# Data
+CSI.txt
+output.err
