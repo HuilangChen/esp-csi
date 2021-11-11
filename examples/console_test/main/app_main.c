@@ -78,14 +78,14 @@ void wifi_csi_raw_cb(void *ctx, wifi_csi_info_t *info)
                rx_ctrl->timestamp, rx_ctrl->ant, rx_ctrl->sig_len, rx_ctrl->rx_state);
     len += snprintf(buff + len, sizeof(buff) - len, ",%d,%d,\"[", info->len, info->first_word_invalid);
     */
-    len += snprintf(buff + len, sizeof(buff) - len, "CSI_DATA %d:[", rx_ctrl->timestamp);
+    len += snprintf(buff + len, sizeof(buff) - len, "%d ", rx_ctrl->timestamp);
     int i = 0;
     for (; i < info->len - 1; i++) {
         len += snprintf(buff + len, sizeof(buff) - len, "%d,", info->buf[i]);
     }
     len += snprintf(buff + len, sizeof(buff) - len, "%d",info->buf[i]);
 
-    len += snprintf(buff + len, sizeof(buff) - len, "]\n");
+    len += snprintf(buff + len, sizeof(buff) - len, "\n");
     ets_printf("%s",buff);
 }
 
@@ -100,7 +100,7 @@ static void wifi_radar_cb(const wifi_radar_info_t *info, void *ctx)
     esp_wifi_radar_get_config(&radar_config);
 
     float amplitude_std  = avg(info->amplitude_std, radar_config.filter_len / 128);
-    float amplitude_corr = avg(info->amplitude_corr, radar_config.filter_len / 128);
+    // float amplitude_corr = avg(info->amplitude_corr, radar_config.filter_len / 128);
     float amplitude_std_max = 0;
     float amplitude_std_avg = 0;
     s_amplitude_std_list[s_count % CONFIG_CSI_BUF_SIZE] = amplitude_std;
@@ -173,11 +173,11 @@ void app_main(void)
     /**
      * @brief Register serial command
      */
-    esp_console_repl_t *repl = NULL;
+    // esp_console_repl_t *repl = NULL;
     esp_console_config_t console_config = ESP_CONSOLE_CONFIG_DEFAULT();
-    esp_console_repl_config_t repl_config = ESP_CONSOLE_REPL_CONFIG_DEFAULT();
+    // esp_console_repl_config_t repl_config = ESP_CONSOLE_REPL_CONFIG_DEFAULT();
     // esp_console_dev_uart_config_t uart_config = ESP_CONSOLE_DEV_UART_CONFIG_DEFAULT();
-    repl_config.prompt = "csi>";
+    // repl_config.prompt = "csi>";
     // ESP_ERROR_CHECK(esp_console_new_repl_uart(&uart_config, &repl_config, &repl));
 
     ESP_ERROR_CHECK(esp_console_init(&console_config));
