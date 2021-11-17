@@ -31,6 +31,8 @@
 #define CONFIG_CSI_BUF_SIZE          50
 #define CONFIG_GPIO_LED_MOVE_STATUS  GPIO_NUM_18
 
+#define LEN_MAC_ADDR 20
+
 static const char *TAG  = "app_main";
 
 float g_move_absolute_threshold = 0.3;
@@ -58,35 +60,61 @@ static void wifi_init(void)
     ESP_ERROR_CHECK(esp_wifi_start());
 }
 
-void wifi_csi_raw_cb(void *ctx, wifi_csi_info_t *info)
+int j = 0;
+
+void wifi_csi_raw_cb(void *ctx, wifi_csi_info_t *data)
 {
-    static char buff[2048];
-    size_t len = 0;
-    wifi_pkt_rx_ctrl_t *rx_ctrl = &info->rx_ctrl;
-    // static uint32_t s_count = 0;
-    /*
-    if (!s_count) {
-        // ets_printf("type,id,mac,rssi,rate,sig_mode,mcs,bandwidth,smoothing,not_sounding,aggregation,stbc,fec_coding,sgi,noise_floor,ampdu_cnt,channel,secondary_channel,local_timestamp,ant,sig_len,rx_state,len,first_word,data\n");
-        len += snprintf(buff, sizeof(buff),"type,id,mac,rssi,rate,sig_mode,mcs,bandwidth,smoothing,not_sounding,aggregation,stbc,fec_coding,sgi,noise_floor,ampdu_cnt,channel,secondary_channel,local_timestamp,ant,sig_len,rx_state,len,first_word,data\n");
-    }
+	wifi_csi_info_t received = data[0];
 
-    len += snprintf(buff + len, sizeof(buff) - len,"CSI_DATA,%d," MACSTR ",%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
-               s_count++, MAC2STR(info->mac), rx_ctrl->rssi, rx_ctrl->rate, rx_ctrl->sig_mode,
-               rx_ctrl->mcs, rx_ctrl->cwb, rx_ctrl->smoothing, rx_ctrl->not_sounding,
-               rx_ctrl->aggregation, rx_ctrl->stbc, rx_ctrl->fec_coding, rx_ctrl->sgi,
-               rx_ctrl->noise_floor, rx_ctrl->ampdu_cnt, rx_ctrl->channel, rx_ctrl->secondary_channel,
-               rx_ctrl->timestamp, rx_ctrl->ant, rx_ctrl->sig_len, rx_ctrl->rx_state);
-    len += snprintf(buff + len, sizeof(buff) - len, ",%d,%d,\"[", info->len, info->first_word_invalid);
-    */
-    len += snprintf(buff + len, sizeof(buff) - len, "%d ", rx_ctrl->timestamp);
-    int i = 0;
-    for (; i < info->len - 1; i++) {
-        len += snprintf(buff + len, sizeof(buff) - len, "%d,", info->buf[i]);
-    }
-    len += snprintf(buff + len, sizeof(buff) - len, "%d",info->buf[i]);
+	char senddMacChr[LEN_MAC_ADDR] = {0}; // sender
+	sprintf(senddMacChr, "%02X:%02X:%02X:%02X:%02X:%02X", received.mac[0], received.mac[1], received.mac[2], received.mac[3], received.mac[4], received.mac[5]);
+	
+//	"A2:B7:93:ED:39:CD" ------ CreatComm
+//	"D4:6E:0E:A7:9B:2B" ------ TP-LINK
+//	"30:23:03:2D:E7:F4" ------ wemotest
+//	"34:97:F6:DE:5E:B0" ------ Lyra Mini
+//	"00:03:7F:12:8C:8C" / "00:03:7F:12:EE:EE" ------ Jalapeno
+//	"40:B0:76:35:50:10" ------ asus router
+//	"78:D2:94:C0:74:22" ------ netgear
+//	"2C:FD:A1:90:65:2A" ------ Lyra Mini AP
+//	"00:03:7F:12:BA:BA" ------ Jalapeno
+	if( received.rx_ctrl.sig_mode == 1 ){
+		j++;
+		printf("Number %d CSI callback func printout.\n", j);		
 
-    len += snprintf(buff + len, sizeof(buff) - len, "\n");
-    ets_printf("%s",buff);
+		printf("rate: %d\n", received.rx_ctrl.rate); // PHY rate encoding of the packet, only valid for non HT(11bg) packet
+		printf("signal mode: %d -> ", received.rx_ctrl.sig_mode);
+		switch(received.rx_ctrl.sig_mode){
+			case 0: printf("Non HT(11bg)\n"); break;
+			case 1: printf("HT(11n)\n"); break;
+			case 3: printf("VHT(11ac)\n"); break;
+			default: printf("unknown");		
+		}
+		
+		printf("HT20 (0) or HT40 (1) (0 - 20MHz, 1 - 40MHz): %d\n", received.rx_ctrl.cwb);
+		printf("Space time block present: %d\n", received.rx_ctrl.stbc);
+		printf("Secondary channel (0 - none, 1 - above, 2 - below): %d\n", received.rx_ctrl.secondary_channel);
+		printf("Length: %d\n", received.len);
+		printf("RSSI (Received Signal Strength Indicator of packet): %d\n", received.rx_ctrl.rssi);
+		printf("WiFi antenna number: %d\n", received.rx_ctrl.ant);
+		printf("Error state: %d\n", received.rx_ctrl.rx_state);
+		printf("First word invalid: %d\n", received.first_word_invalid);
+		printf("Timestamp:%d\n", received.rx_ctrl.timestamp); // unit: microseconds
+
+
+		// may display other information
+		
+		// print data
+		printf("CSI address: %s, len: %d\n", senddMacChr, data->len);
+		int8_t* my_ptr = data->buf;
+		printf("*****"); 
+		for(int i = 0; i < data->len; i++){ 
+			printf("%02X ", my_ptr[i]); 	
+		}
+		printf("!!!!!");
+		printf("\n\n");
+
+	} 
 }
 
 

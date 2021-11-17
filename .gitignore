@@ -83,4 +83,5 @@ docs/docusaurus/website/node_modules
 
 # Data
 CSI.txt
+CSI*.txt
 output.err
